@@ -1,5 +1,4 @@
 from fastapi import FastAPI
-import pymssql
 import pyodbc
 import os
 # drivers = [driver for driver in pyodbc.drivers()]
