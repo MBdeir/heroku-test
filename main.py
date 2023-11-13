@@ -1,10 +1,16 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, UploadFile
 import pyodbc
 import os
+from PIL import Image
+import numpy as np
+import io
+from tensorflow.keras.applications.efficientnet import EfficientNetB7
+from tensorflow.keras.applications.efficientnet import decode_predictions
 # drivers = [driver for driver in pyodbc.drivers()]
 # print(drivers)
 
 app = FastAPI()
+model = EfficientNetB7()
 
 @app.get("/")
 def home():
@@ -57,3 +63,14 @@ async def random_fact():
         return {"random_fact": fact}
     else:
         return {"error": "An error occurred while fetching the random fact."}
+    
+@app.post("/api/uploadImg")
+async def name(file : UploadFile):
+    image = Image.open(io.BytesIO(await file.read()))
+    image = image.resize((600, 600))
+    image_np = np.array(image)
+    image_np = image_np.reshape(1, 600, 600, 3)
+    result = model.predict(image_np)
+    decoded_predictions = decode_predictions(result, top=1)[0]
+    predicted_class = decoded_predictions[0][1]
+    return {"category": predicted_class}
