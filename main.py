@@ -3,6 +3,7 @@ import pyodbc
 import os
 from PIL import Image
 import numpy as np
+from roboflow import Roboflow
 import io
 from tensorflow.keras.applications.efficientnet import EfficientNetB7
 from tensorflow.keras.applications.efficientnet import decode_predictions
@@ -11,6 +12,13 @@ from tensorflow.keras.applications.efficientnet import decode_predictions
 
 app = FastAPI()
 model = EfficientNetB7()
+
+
+rf = Roboflow(api_key="08ygxtxy7JYwrrNijLPb")
+project = rf.workspace().project("animals-ij5d2")
+model = project.version(1).model
+
+
 
 @app.get("/")
 def home():
@@ -74,3 +82,12 @@ async def name(file : UploadFile):
     decoded_predictions = decode_predictions(result, top=1)[0]
     predicted_class = decoded_predictions[0][1]
     return {"category": predicted_class}
+
+
+@app.post("/api/uploadImg2")
+async def classify_image(file: UploadFile):
+    image_data = await file.read()
+    with open("temp_image.jpg", "wb") as f:
+        f.write(image_data)
+    prediction = model.predict("temp_image.jpg", confidence=40, overlap=30).json()
+    return {"prediction": prediction}
