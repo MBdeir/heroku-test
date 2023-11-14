@@ -7,15 +7,15 @@ import io
 
 
 def get_animal_info(animal_name):
-    cnxn = get_db_connection()
-    if cnxn:
+    conn = get_db_connection()
+    if conn:
         try:            
-            cursor = cnxn.cursor()
+            cursor = conn.cursor()
             cursor.execute("EXEC ws.spGetAnimalInfo ?", animal_name)            
             record = cursor.fetchone()
-            cnxn.commit()
+            conn.commit()
             cursor.close()
-            cnxn.close()
+            conn.close()
             
             if record:
                 return {
