@@ -4,6 +4,12 @@ import os
 from PIL import Image
 from roboflow import Roboflow
 import io
+from sqlalchemy import create_engine, text
+
+
+
+engine = create_engine('mssql+pymssql://MBdeir:978d05b3-dba5-4962-a38e-8451827a5de7@sportshivedbserver.database.windows.net/sportshive')
+
 
 
 def get_animal_info(animal_name):
@@ -82,5 +88,5 @@ def classify_image_from_data(image_data, model):
     
 def get_db_connection():
     #conn = pyodbc.connect(os.getenv('WSconnectionString'))
-    conn = pyodbc.connect('SERVER=sportshivedbserver.database.windows.net;DATABASE=sportshive;UID=MBdeir;PWD=978d05b3-dba5-4962-a38e-8451827a5de7;')
+
     return conn

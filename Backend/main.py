@@ -1,7 +1,9 @@
 from fastapi import FastAPI, UploadFile
 from PIL import Image
-from support import get_animal_info,get_random_fact,classify_image_from_data,get_db_connection
+from support import get_animal_info,classify_image_from_data,get_db_connection
 from roboflow import Roboflow
+from sqlalchemy import create_engine, text
+
 
 
 app = FastAPI()
@@ -9,6 +11,41 @@ app = FastAPI()
 rf = Roboflow(api_key="08ygxtxy7JYwrrNijLPb")
 project = rf.workspace().project("animals-ij5d2")
 model = project.version(1).model
+
+engine = create_engine('mssql+pymssql://MBdeir:978d05b3-dba5-4962-a38e-8451827a5de7@sportshivedbserver.database.windows.net/sportshive')
+
+
+def get_random_fact():
+    try:
+        # Create a connection and execute the stored procedure
+        with engine.connect() as conn:
+            result = conn.execute(text("EXEC ws.spRandomFact"))
+            record = result.fetchone()
+        
+        if record:
+            return {
+                "fact": record[1],
+                "primaryImage": record[2],
+                "secondaryImage": record[3]
+            }
+        else:
+            return None
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return str(e)
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=10000)
+
+
+
+
+
+
+
+
+
 
 @app.get("/random_fact")
 async def random_fact():
