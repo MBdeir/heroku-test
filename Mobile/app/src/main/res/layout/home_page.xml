@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="@color/baby_blue"
+    android:layout_height="match_parent">
+
+    <!-- Outer LinearLayout to the left -->
+
+    <!-- Inner LinearLayout to the right -->
+    <LinearLayout
+        android:id="@+id/outerLinearLayout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/rounder_corners_page"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/innerLinearLayout"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintHeight_percent="0.75">
+
+        <!-- Nested LinearLayout for image and text -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            android:orientation="horizontal"
+            >
+
+            <LinearLayout
+                android:layout_width="172dp"
+                android:layout_height="68dp"
+                android:orientation="horizontal"
+                android:layout_alignParentLeft="true">
+
+                <!-- ImageView for the image -->
+                <ImageView
+                    android:id="@+id/yourImageView"
+                    android:layout_width="70dp"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@string/logo"
+                    android:paddingTop="15dp"
+                    android:paddingBottom="15dp"
+                    android:paddingRight="5dp"
+                    android:scaleType="fitEnd"
+                    android:src="@drawable/wildsight" />
+
+                <!-- TextView for the text -->
+                <TextView
+                    android:id="@+id/yourTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="@string/app_name"
+                    android:textColor="@color/baby_blue"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/settingsIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:contentDescription="@string/settings"
+                android:paddingRight="20dp"
+                android:src="@android:drawable/ic_settings"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:tint="@color/baby_blue" />
+
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="85dp"
+            android:paddingLeft="35dp"
+            android:paddingTop="40dp"
+            android:text="@string/home_page_title"
+            android:textColor="@color/baby_blue"
+            android:textSize="20sp"
+            android:textStyle="bold|italic"></TextView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <!-- First child LinearLayout -->
+            <LinearLayout
+                android:layout_width="140dp"
+                android:layout_height="300dp"
+                android:orientation="vertical"
+                android:background="@drawable/rounded_corners"
+                android:layout_gravity="center"
+                android:alpha="0.5"
+                >
+
+                <ImageView
+                    android:id="@+id/plusIcon"
+                    android:layout_width="match_parent"
+                    android:layout_height="129dp"
+                    android:contentDescription="Add"
+                    android:paddingTop="40dp"
+                    android:src="@android:drawable/ic_menu_add" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="From Files"
+                    android:textStyle="bold|italic"
+                    android:textSize="20sp"
+                    android:paddingTop="40dp"
+                    android:gravity="center"
+                    android:textColor="#FFFFFF"
+
+                    />
+            </LinearLayout>
+
+            <Space
+                android:layout_width="12dp"
+                android:layout_height="16dp" />
+            <LinearLayout
+                android:layout_width="140dp"
+                android:layout_height="300dp"
+                android:orientation="vertical"
+                android:background="@drawable/rounded_corners"
+                android:layout_gravity="center">
+                <ImageView
+                    android:id="@+id/cameraIcon"
+                    android:layout_width="match_parent"
+                    android:layout_height="129dp"
+                    android:contentDescription="Camera"
+                    android:paddingTop="41dp"
+                    android:src="@android:drawable/ic_menu_camera"
+                    />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Open Camera"
+                    android:textStyle="bold|italic"
+                    android:textSize="20sp"
+                    android:paddingTop="40dp"
+                    android:gravity="center"
+                    android:textColor="#FFFFFF"
+
+                    />
+            </LinearLayout>
+        </LinearLayout>
+
+
+    </LinearLayout>
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="244dp"
+        android:layout_height="48dp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="30dp"
+        android:text="Fun Facts!"
+        android:textColor="@color/baby_blue"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:theme="@style/Theme.ButtonChangerWhite"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Button 2 -->
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="244dp"
+        android:layout_height="48dp"
+        android:layout_gravity="center"
+        android:text="Discover Animals"
+        android:textColor="@color/baby_blue"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:theme="@style/Theme.ButtonChangerWhite"
+        app:layout_constraintBottom_toTopOf="@+id/button1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+    <LinearLayout
+        android:id="@+id/innerLinearLayout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <!-- Other content for the inner LinearLayout goes here -->
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

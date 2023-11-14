@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">WildSight</string>
+    <string name="logo">WildSight logo</string>
+    <string name="settings">settings icon</string>
+    <string name="home_page_title">Capture the  wonder of nature!!</string>
 </resources>
