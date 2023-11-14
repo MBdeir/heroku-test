@@ -26,6 +26,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="32dp"
         android:text="Login"
+        android:onClick="MoveToLogInView"
         android:textColor="@color/white"
         android:textStyle="bold"
         android:textSize="20sp"

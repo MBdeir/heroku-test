@@ -10,16 +10,15 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class SignUpActivity extends AppCompatActivity {
-    @Override
+public class LogInActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.signup);
+        setContentView(R.layout.login);
         // Get the TextView from your layout
-        TextView textView = findViewById(R.id.login);
+        TextView textView = findViewById(R.id.signup);
 
         // Create a SpannableString with the text you want to underline
-        String textToUnderline = "login";
+        String textToUnderline = "signup";
         SpannableString content = new SpannableString(textToUnderline);
 
         // Apply the UnderlineSpan to the specific portion of the text
@@ -32,8 +31,8 @@ public class SignUpActivity extends AppCompatActivity {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
-    public void BackToLogInScreen(View view){
-        Intent intent = new Intent(this, LogInActivity.class);
+    public void BackToSignUpScreen(View view){
+        Intent intent = new Intent(this, SignUpActivity.class);
         startActivity(intent);
     }
 }

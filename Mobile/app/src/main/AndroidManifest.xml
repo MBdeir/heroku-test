@@ -23,7 +23,9 @@
         </activity>
         <activity
             android:name=".SignUpActivity">
-            <!-- Intent filters, configuration, or other attributes can be added here if needed -->
+        </activity>
+        <activity
+            android:name=".LogInActivity">
         </activity>
     </application>
 </manifest>
