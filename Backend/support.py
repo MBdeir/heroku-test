@@ -76,8 +76,42 @@ def get_all_animals():
         print("Connection string not found in environment variables.")
         return []
 
+def user_login(username, password):
+    conn = get_db_connection()
+    if conn:
+        try:
+            stmt = text("EXEC ws.spLogin :username, :password")
+            stmt = stmt.bindparams(username=username, password=password)
+            result = conn.execute(stmt)
+            message = result.fetchone()[0]
+            return message
+        except Exception as e:
+                return "Either the username doesn't exist, or the password doesn't match."
+        finally:
+            conn.close()
+    else:
+        return "Connection string not found in environment variables."
 
-
+def create_account(username, email, password):
+    conn = get_db_connection()
+    if conn:
+        try:
+            stmt = text("EXEC ws.spCreateAccount :username, :email, :password")
+            stmt = stmt.bindparams(username=username, email=email, password=password)
+            result = conn.execute(stmt)
+            message = result.fetchone()[0]
+            return message
+        except Exception as e:
+            if "Username already exists." in str(e):
+                return "Username already exists."
+            elif "Email already exists." in str(e):
+                return "Email already exists."
+            else:
+                return "An error occurred while creating the account."
+        finally:
+            conn.close()
+    else:
+        return "Connection string not found in environment variables."
 
 def classify_image_from_data(image_data, model):
     with open("temp_image.jpg", "wb") as f:
