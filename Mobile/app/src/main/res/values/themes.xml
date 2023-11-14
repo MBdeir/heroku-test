@@ -9,4 +9,7 @@
     <style name="Theme.ButtonChanger" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/baby_blue</item>
     </style>
+    <style name="Theme.ButtonChangerWhite" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/white</item>
+    </style>
 </resources>
