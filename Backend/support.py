@@ -1,28 +1,20 @@
 from fastapi import FastAPI, UploadFile
-import pyodbc
 import os
 from PIL import Image
 from roboflow import Roboflow
-import io
 from sqlalchemy import create_engine, text
-
-
-
-engine = create_engine('mssql+pymssql://MBdeir:978d05b3-dba5-4962-a38e-8451827a5de7@sportshivedbserver.database.windows.net/sportshive')
 
 
 
 def get_animal_info(animal_name):
     conn = get_db_connection()
     if conn:
-        try:            
-            cursor = conn.cursor()
-            cursor.execute("EXEC ws.spGetAnimalInfo ?", animal_name)            
-            record = cursor.fetchone()
-            conn.commit()
-            cursor.close()
-            conn.close()
+        try:
+            query = text("EXEC ws.spGetAnimalInfo :name")
             
+            result = conn.execute(query, {"name": animal_name})
+            record = result.fetchone()
+
             if record:
                 return {
                     "shortDescription": record[0],
@@ -39,6 +31,8 @@ def get_animal_info(animal_name):
         except Exception as e:
             print(f"An error occurred: {e}")
             return str(e)
+        finally:
+            conn.close()
     else:
         print("Connection string not found in environment variables.")
         return None
@@ -46,29 +40,44 @@ def get_animal_info(animal_name):
 
 def get_random_fact():
     conn = get_db_connection()
-    
+    if conn:
+        with conn as conn2:
+            result = conn2.execute(text("EXEC ws.spRandomFact"))
+            record = result.fetchone()
+        
+        if record:
+            return {
+                "fact": record[1],
+                "primaryImage": record[2],
+                "secondaryImage": record[3]
+            }
+        else:
+            return None
+    else:
+        return None
+
+def get_all_animals():
+    conn = get_db_connection()
     if conn:
         try:
-            cursor = conn.cursor()
-            cursor.execute("EXEC ws.spRandomFact")
-            record = cursor.fetchone()
-            conn.commit()
-            cursor.close()
-            conn.close()
-            if record:
-                return {
-                    "fact": record[1],
-                    "primaryImage": record[2],
-                    "secondaryImage": record[3]
-                }
-            else:
-                return None
+            query = text("EXEC ws.spGetAllAnimals")
+            result = conn.execute(query)
+            rows = result.fetchall()
+            columns = result.keys()
+
+            animals = [dict(zip(columns, row)) for row in rows]
+            return animals
         except Exception as e:
             print(f"An error occurred: {e}")
-            return str(e)
+            return []
+        finally:
+            conn.close()
     else:
         print("Connection string not found in environment variables.")
-        return None
+        return []
+
+
+
 
 def classify_image_from_data(image_data, model):
     with open("temp_image.jpg", "wb") as f:
@@ -87,6 +96,5 @@ def classify_image_from_data(image_data, model):
         return {"error": "No predictions found in the response"}
     
 def get_db_connection():
-    #conn = pyodbc.connect(os.getenv('WSconnectionString'))
-
-    return conn
+    engine = create_engine(os.getenv('WSconnectionString'))
+    return engine.connect()
