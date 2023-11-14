@@ -1,6 +1,6 @@
 from fastapi import FastAPI, UploadFile
 from PIL import Image
-from support import get_animal_info,get_random_fact,classify_image_from_data
+from support import get_animal_info,get_random_fact,classify_image_from_data,get_db_connection
 from roboflow import Roboflow
 
 
@@ -32,6 +32,22 @@ async def animal_info(name: str):
     else:
         return {"error":"It seems this animal is not in our database"}
     
+
+@app.get("/all_animals")
+async def all_animals():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("EXEC ws.spGetAllAnimals")
+    results = cursor.fetchall()
+    columns = [column[0] for column in cursor.description]
+    cursor.close()
+    conn.close()
+    animals = [dict(zip(columns, row)) for row in results]
+    return animals
+
+
+
+
 
 ########################################CODE ARCHIEVE########################################
 ########################################CODE ARCHIEVE########################################

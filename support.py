@@ -7,16 +7,11 @@ import io
 
 
 def get_animal_info(animal_name):
-    connection_string = os.getenv('WSconnectionString')
-    
-    if connection_string:
-        try:
-            cnxn = pyodbc.connect(connection_string)
+    cnxn = get_db_connection()
+    if cnxn:
+        try:            
             cursor = cnxn.cursor()
-            
-            # Use parameterized queries to prevent SQL injection
-            cursor.execute("EXEC dbo.spGetAnimalInfo ?", animal_name)
-            
+            cursor.execute("EXEC ws.spGetAnimalInfo ?", animal_name)            
             record = cursor.fetchone()
             cnxn.commit()
             cursor.close()
@@ -44,17 +39,16 @@ def get_animal_info(animal_name):
 
 
 def get_random_fact():
-    connection_string = os.getenv('WSconnectionString')
+    conn = get_db_connection()
     
-    if connection_string:
+    if conn:
         try:
-            cnxn = pyodbc.connect(connection_string)
-            cursor = cnxn.cursor()
-            cursor.execute("EXEC dbo.spRandomFact")
+            cursor = conn.cursor()
+            cursor.execute("EXEC ws.spRandomFact")
             record = cursor.fetchone()
-            cnxn.commit()
+            conn.commit()
             cursor.close()
-            cnxn.close()
+            conn.close()
             if record:
                 return {
                     "fact": record[1],
@@ -85,3 +79,7 @@ def classify_image_from_data(image_data, model):
         return {"prediction": simplified_prediction}
     else:
         return {"error": "No predictions found in the response"}
+    
+def get_db_connection():
+    conn = pyodbc.connect(os.getenv('WSconnectionString'))
+    return conn
