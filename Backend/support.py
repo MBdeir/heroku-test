@@ -82,5 +82,5 @@ def classify_image_from_data(image_data, model):
     
 def get_db_connection():
     #conn = pyodbc.connect(os.getenv('WSconnectionString'))
-    conn = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};SERVER=sportshivedbserver.database.windows.net;DATABASE=sportshive;UID=MBdeir;PWD=978d05b3-dba5-4962-a38e-8451827a5de7;')
+    conn = pyodbc.connect('SERVER=sportshivedbserver.database.windows.net;DATABASE=sportshive;UID=MBdeir;PWD=978d05b3-dba5-4962-a38e-8451827a5de7;')
     return conn
