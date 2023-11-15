@@ -12,4 +12,14 @@ public class HomePageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_page);
     }
+    public void DiscoverAnimals(View view){
+        Intent intent = new Intent(this, AnimalsListActivity.class);
+        startActivity(intent);
+    }
+
+    public void FunFacts(View view){
+        Intent intent = new Intent(this, FunFactsActivity.class);
+        startActivity(intent);
+    }
+
 }
