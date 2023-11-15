@@ -28,8 +28,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="65dp"
-            android:orientation="horizontal"
-            >
+            android:orientation="horizontal">
 
             <LinearLayout
                 android:layout_width="172dp"
@@ -61,18 +60,31 @@
                     android:textSize="16sp" />
             </LinearLayout>
 
-            <ImageView
-                android:id="@+id/settingsIcon"
+            <!-- Blue Circle to the right -->
+            <FrameLayout
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:contentDescription="@string/settings"
-                android:paddingRight="20dp"
-                android:src="@android:drawable/ic_settings"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:tint="@color/baby_blue" />
+                android:layout_centerVertical="true"
+                android:layout_marginRight="30dp">
 
+                <!-- Blue Circle -->
+                <View
+                    android:id="@+id/blueCircle"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/circle_background" />
+
+                <!-- Overlay Image -->
+                <ImageView
+                    android:id="@+id/overlayImage"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/settings"
+                    android:layout_gravity="center" />
+            </FrameLayout>
         </RelativeLayout>
+
 
         <TextView
             android:layout_width="wrap_content"
@@ -105,8 +117,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="129dp"
                     android:contentDescription="Add"
-                    android:paddingTop="40dp"
-                    android:src="@android:drawable/ic_menu_add" />
+                    android:src="@drawable/add" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -135,8 +146,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="129dp"
                     android:contentDescription="Camera"
-                    android:paddingTop="41dp"
-                    android:src="@android:drawable/ic_menu_camera"
+                    android:paddingBottom="30dp"
+                    android:paddingTop="30dp"
+                    android:src="@drawable/camera"
                     />
 
                 <TextView

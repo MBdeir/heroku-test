@@ -22,10 +22,16 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".LogInActivity">
+        </activity>
+        <activity
             android:name=".SignUpActivity">
         </activity>
         <activity
-            android:name=".LogInActivity">
+            android:name=".HomePageActivity">
+        </activity>
+        <activity
+            android:name=".ResultActivity">
         </activity>
     </application>
 </manifest>

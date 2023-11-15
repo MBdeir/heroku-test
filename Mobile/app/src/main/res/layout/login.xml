@@ -121,6 +121,7 @@
             android:textColor="@color/baby_blue"
             android:textSize="18sp"
             android:textStyle="bold"
+            android:onClick="OpenHomePage"
             android:theme="@style/Theme.ButtonChangerWhite" />
     </LinearLayout>
 
