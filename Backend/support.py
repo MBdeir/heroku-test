@@ -3,7 +3,8 @@ import os
 from PIL import Image
 from roboflow import Roboflow
 from sqlalchemy import create_engine, text
-
+from fun_facts_data import fun_facts
+import random
 
 
 def get_animal_info(animal_name):
@@ -38,23 +39,20 @@ def get_animal_info(animal_name):
         return None
 
 
+
 def get_random_fact():
-    conn = get_db_connection()
-    if conn:
-        with conn as conn2:
-            result = conn2.execute(text("EXEC ws.spRandomFact"))
-            record = result.fetchone()
-        
-        if record:
-            return {
-                "fact": record[1],
-                "primaryImage": record[2],
-                "secondaryImage": record[3]
-            }
-        else:
-            return None
+    if fun_facts:
+        return random.choice(fun_facts)
     else:
         return None
+
+
+
+
+
+
+
+
 
 def get_all_animals():
     conn = get_db_connection()

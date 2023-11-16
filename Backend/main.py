@@ -4,6 +4,7 @@ from pydantic import BaseModel
 from support import get_animal_info,classify_image_from_data, get_random_fact,get_all_animals,create_account,user_login,add_user_favourite,get_favourite_animals
 from roboflow import Roboflow
 from sqlalchemy import create_engine, text
+from fun_facts_data import fun_facts  
 
 app = FastAPI()
 
@@ -42,7 +43,7 @@ async def animal_info(name: str):
 
 class UserFavouritesRequest(BaseModel):
     username: str
-    
+
 @app.get("/fav_animals")
 async def user_favourites(request: UserFavouritesRequest):
     favourites = get_favourite_animals(request.username)
