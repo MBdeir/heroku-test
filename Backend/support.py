@@ -100,8 +100,14 @@ def create_account(username, email, password):
             stmt = stmt.bindparams(username=username, email=email, password=password)
             result = conn.execute(stmt)
             message = result.fetchone()[0]
+
+            # Commit the transaction
+            conn.commit()
+
             return message
         except Exception as e:
+            # Rollback in case of error
+            conn.rollback()
             if "Username already exists." in str(e):
                 return "Username already exists."
             elif "Email already exists." in str(e):
@@ -112,6 +118,7 @@ def create_account(username, email, password):
             conn.close()
     else:
         return "Connection string not found in environment variables."
+    
 
 def classify_image_from_data(image_data, model):
     with open("temp_image.jpg", "wb") as f:
