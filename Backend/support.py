@@ -119,6 +119,33 @@ def create_account(username, email, password):
     else:
         return "Connection string not found in environment variables."
     
+def add_user_favourite(username, animal):
+    conn = get_db_connection()
+    if conn:
+        try:
+            stmt = text("EXEC ws.spUserFavouritesAnimal :username, :animal")
+            stmt = stmt.bindparams(username=username, animal=animal)
+            conn.execute(stmt)
+
+            # Commit the transaction
+            conn.commit()
+
+            return "Favourite animal added successfully."
+        except Exception as e:
+            conn.rollback()
+            error_message = str(e)
+            if "50001" in error_message:
+                return "User already favourited this animal."
+            elif "50002" in error_message:
+                return "User does not exist."
+            elif "50003" in error_message:
+                return "Animal doesn't exist."
+            else:
+                return "An error occurred while adding the favourite animal."
+        finally:
+            conn.close()
+    else:
+        return "Connection string not found in environment variables."
 
 def classify_image_from_data(image_data, model):
     with open("temp_image.jpg", "wb") as f:

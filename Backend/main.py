@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException, UploadFile
 from PIL import Image
 from pydantic import BaseModel
-from support import get_animal_info,classify_image_from_data, get_random_fact,get_all_animals,create_account,user_login
+from support import get_animal_info,classify_image_from_data, get_random_fact,get_all_animals,create_account,user_login,add_user_favourite
 from roboflow import Roboflow
 from sqlalchemy import create_engine, text
 
@@ -81,7 +81,18 @@ async def create_account_endpoint(request_data: CreateAccountRequest):
     else:
         raise HTTPException(status_code=500, detail="An error occurred while creating the account.")
     
+class FavouriteAnimalRequest(BaseModel):
+    username: str
+    animal: str
 
+@app.post("/add_favourite_animal")
+async def add_favourite_animal(request_data: FavouriteAnimalRequest):
+    message = add_user_favourite(request_data.username, request_data.animal)
+    
+    if "successfully" in message:
+        return {"message": message}
+    else:
+        raise HTTPException(status_code=400, detail=message)
 
 if __name__ == "__main__":
     import uvicorn
