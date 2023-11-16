@@ -1,11 +1,10 @@
-from fastapi import FastAPI, HTTPException, UploadFile
+from fastapi import FastAPI, HTTPException, Query, UploadFile
 from PIL import Image
 from pydantic import BaseModel
-from support import get_animal_info,classify_image_from_data, get_random_fact,get_all_animals,create_account,user_login,add_user_favourite
+from support import get_animal_info,classify_image_from_data, get_random_fact,get_all_animals,create_account,user_login,add_user_favourite,get_favourite_animals
 from roboflow import Roboflow
 from sqlalchemy import create_engine, text
 
-#hello world
 app = FastAPI()
 
 rf = Roboflow(api_key="08ygxtxy7JYwrrNijLPb")
@@ -39,7 +38,20 @@ async def animal_info(name: str):
         return { name : animal_info}
     else:
         return {"error":"It seems this animal is not in our database"}
+
+
+class UserFavouritesRequest(BaseModel):
+    username: str
     
+@app.get("/fav_animals")
+async def user_favourites(request: UserFavouritesRequest):
+    favourites = get_favourite_animals(request.username)
+    if favourites:
+        return favourites
+    else:
+        raise HTTPException(status_code=404, detail="No favourites found or an error occurred.")
+
+
 class LoginRequest(BaseModel):
     username: str
     password: str
@@ -61,6 +73,8 @@ async def all_animals():
     else:
         return {"error": "An error occurred while fetching all animals."}
     
+
+
 
 class CreateAccountRequest(BaseModel):
     username: str

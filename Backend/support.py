@@ -76,6 +76,40 @@ def get_all_animals():
         print("Connection string not found in environment variables.")
         return []
 
+def get_favourite_animals(username):
+    conn = get_db_connection()
+    if conn:
+        try:
+            stmt = text("EXEC ws.spGetFavouriteAnimals :username")
+            result = conn.execute(stmt, {"username": username})
+            animals = result.fetchall()
+            
+            # Format the result
+            formatted_result = {}
+            for animal in animals:
+                formatted_result[animal.category] = {
+                    "shortDescription": animal.shortDescription,
+                    "habitat": animal.habitat,
+                    "diet": animal.diet,
+                    "location": animal.location,
+                    "type": animal.type,
+                    "lifeSpan": animal.lifeSpan,
+                    "weight": animal.weight,
+                    "top_speed": animal.top_Speed
+                }
+
+            return formatted_result
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            return {}
+        finally:
+            conn.close()
+    else:
+        print("Connection string not found in environment variables.")
+        return {}
+
+
+
 def user_login(username, password):
     conn = get_db_connection()
     if conn:
