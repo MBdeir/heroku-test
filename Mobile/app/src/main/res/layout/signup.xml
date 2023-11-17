@@ -82,7 +82,7 @@
             android:textStyle="bold" />
 
         <EditText
-            android:id="@+id/uasername_input"
+            android:id="@+id/username_input"
             android:layout_width="352dp"
             android:layout_height="48dp"
             android:layout_marginLeft="16dp"
@@ -137,6 +137,7 @@
             android:layout_height="48dp"
             android:layout_gravity="center"
             android:text="Register!"
+            android:onClick="register"
             android:textColor="@color/baby_blue"
             android:textSize="18sp"
             android:textStyle="bold"
