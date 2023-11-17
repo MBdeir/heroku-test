@@ -158,8 +158,6 @@ def add_user_favourite(username, animal):
             stmt = text("EXEC ws.spUserFavouritesAnimal :username, :animal")
             stmt = stmt.bindparams(username=username, animal=animal)
             conn.execute(stmt)
-
-            # Commit the transaction
             conn.commit()
 
             return "Favourite animal added successfully."
@@ -169,11 +167,7 @@ def add_user_favourite(username, animal):
             if "50001" in error_message:
                 return "User already favourited this animal."
             elif "50002" in error_message:
-                return "User does not exist."
-            elif "50003" in error_message:
-                return "Animal doesn't exist."
-            else:
-                return "An error occurred while adding the favourite animal."
+                return "This animal doesnt exist."
         finally:
             conn.close()
     else:

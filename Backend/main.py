@@ -93,15 +93,10 @@ class FavouriteAnimalRequest(BaseModel):
 @app.post("/add_favourite_animal")
 async def add_favourite_animal(request_data: FavouriteAnimalRequest):
     message = add_user_favourite(request_data.username, request_data.animal)
-    
-    if "successfully" in message:
-        return {"message": message}
-    else:
-        raise HTTPException(status_code=400, detail=message)
+    return {"message":message}
 
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=10000)
+
+
 
 
 #hello world
