@@ -60,11 +60,8 @@ class LoginRequest(BaseModel):
 @app.post("/login")
 async def login_endpoint(request_data: LoginRequest):
     message = user_login(request_data.username, request_data.password)
-    
-    if message == "Account authorized":
-        return {"message": message}
-    else:
-        raise HTTPException(status_code=400, detail=message)
+    return {"message":message}
+
 
 @app.get("/all_animals")
 async def all_animals():
@@ -86,15 +83,8 @@ class CreateAccountRequest(BaseModel):
 @app.post("/create_account")
 async def create_account_endpoint(request_data: CreateAccountRequest):
     message = create_account(request_data.username, request_data.email, request_data.password)
-    
-    if message == "Account created successfully.":
-        return {"message": message}
-    elif message == "Username already exists.":
-        raise HTTPException(status_code=400, detail="Username already exists.")
-    elif message == "Email already exists.":
-        raise HTTPException(status_code=400, detail="Email already exists.")
-    else:
-        raise HTTPException(status_code=500, detail="An error occurred while creating the account.")
+    return {"message":message}
+
     
 class FavouriteAnimalRequest(BaseModel):
     username: str
