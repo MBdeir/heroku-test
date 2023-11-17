@@ -1,6 +1,10 @@
 package com.example.wildsight;
 
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -10,35 +14,83 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageRequest;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.Volley;
+import com.squareup.picasso.Picasso;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 
 public class AnimalsListActivity extends AppCompatActivity{
+    LinearLayout itemContainer;
+    RequestQueue requestQueue;
+    private Dialog customProgressDialog;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.animals_list);
+        itemContainer = findViewById(R.id.itemContainer);
+        requestQueue = Volley.newRequestQueue(this);
+        fetchAnimals();
+    }
+    private void fetchAnimals() {
+        customProgressDialog = new Dialog(this);
+        customProgressDialog.setContentView(R.layout.custom_progress_dialog);
+        customProgressDialog.setCancelable(false);
+        customProgressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        customProgressDialog.show();
+        String url = "https://wildsight.onrender.com/all_animals";
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                try {
+                    for (int i = 0; i < response.length(); i++) {
+                        JSONObject animal = response.getJSONObject(i);
+                        addAnimalToView(animal);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                customProgressDialog.dismiss();
 
-        // Get the container
-        LinearLayout itemContainer = findViewById(R.id.itemContainer);
+            }
 
-        // Add items dynamically (you can replace this with your data)
-        for (int i = 1; i <= 5; i++) {
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        });
+
+        requestQueue.add(jsonArrayRequest);
+    }
+
+    private void addAnimalToView(JSONObject animal) {
+        try {
             View itemView = getLayoutInflater().inflate(R.layout.item_layout, null);
-            ImageView itemImage = itemView.findViewById(R.id.itemImage);
+            final ImageView itemImage = itemView.findViewById(R.id.itemImage);
             TextView itemName = itemView.findViewById(R.id.itemName);
             TextView moreInfoButton = itemView.findViewById(R.id.moreInfoButton);
             TextView descriptionText = itemView.findViewById(R.id.descriptionText);
 
-            // Set item data (replace with your data)
-            itemImage.setImageResource(R.drawable.download1);
-            itemName.setText("Cat " + i);
-            descriptionText.setText("Cats are graceful, carnivorous (meat-eating) mammals with sharp teeth and claws. Most kinds of cat prey on other mammals or birds, and most hunt alone at night. Only lions live and hunt in groups. The claws of cats are extended to help grip their prey, but retracted (pulled back) when not in use ");
+            itemName.setText(animal.getString("category"));
+            descriptionText.setText(animal.getString("shortDescription"));
 
-            // Set button click listener
+            String imageUrl = animal.getString("image");
+            Picasso.get().load(imageUrl)
+                    .into(itemImage);
+
             moreInfoButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    // Toggle visibility of the description
                     if (descriptionText.getVisibility() == View.VISIBLE) {
                         descriptionText.setVisibility(View.GONE);
                     } else {
@@ -46,17 +98,17 @@ public class AnimalsListActivity extends AppCompatActivity{
                     }
                 }
             });
+
             itemContainer.addView(itemView);
             Space space = new Space(this);
             space.setMinimumHeight(20);
-            space.setMinimumWidth(20);
             itemContainer.addView(space);
-
-
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
-    public void GoToFavorites(View view){
-        Intent intent = new Intent(this, FavoritesActivity.class);
-        startActivity(intent);
-    }
+
+
+
+
 }
