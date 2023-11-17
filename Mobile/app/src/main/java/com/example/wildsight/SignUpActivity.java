@@ -75,7 +75,7 @@ public class SignUpActivity extends AppCompatActivity {
                     return;
                 }
 
-                // calling a method to post the data and passing our name and job.
+
                 postDataUsingVolley(usernameEdit.getText().toString(), passwordEdit.getText().toString(), emailEdit.getText().toString());
             }
         });
@@ -124,6 +124,7 @@ public class SignUpActivity extends AppCompatActivity {
                             GoToHomeScreen();
                         } else {
                             Toast.makeText(SignUpActivity.this, message, Toast.LENGTH_SHORT).show();
+                            GoToHomeScreen();
                         }
                     }
                 },
@@ -143,7 +144,7 @@ public class SignUpActivity extends AppCompatActivity {
             }
         };
 
-        // Add the request to the RequestQueue
+
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(request);
 

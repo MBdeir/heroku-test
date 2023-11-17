@@ -5,12 +5,37 @@ import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.UnderlineSpan;
+import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
+
 public class LogInActivity extends AppCompatActivity {
+
+    private static final String TAG = SignUpActivity.class.getSimpleName();
+    EditText usernameEdit;
+    EditText passwordEdit;
+
+    Button postDataBtn;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
@@ -26,6 +51,30 @@ public class LogInActivity extends AppCompatActivity {
 
         // Set the SpannableString to the TextView
         textView.setText(content);
+
+
+        usernameEdit = findViewById(R.id.uasername_input_login);
+        passwordEdit = findViewById(R.id.password_input_login);
+        postDataBtn =findViewById(R.id.button);
+
+        postDataBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // validating if the text field is empty or not.
+                if (usernameEdit.getText().toString().isEmpty()) {
+                    Toast.makeText(LogInActivity.this, "username is required", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (passwordEdit.getText().toString().isEmpty()) {
+                    Toast.makeText(LogInActivity.this, "password is required", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                postDataUsingVolley(usernameEdit.getText().toString(), passwordEdit.getText().toString());
+            }
+        });
+
+
     }
     public void BackToMainScreen(View view){
         Intent intent = new Intent(this, MainActivity.class);
@@ -38,5 +87,64 @@ public class LogInActivity extends AppCompatActivity {
     public void OpenHomePage(View view){
         Intent intent = new Intent(this, HomePageActivity.class);
         startActivity(intent);
+    }
+
+    public void GoToHomeScreen(){
+        Intent intent = new Intent(this, HomePageActivity.class);
+        startActivity(intent);
+    }
+
+    private void postDataUsingVolley(String username, String password) {
+
+        String url = "https://wildsight.onrender.com/login";
+
+        // Replace the JSON object with your actual request body
+        JSONObject jsonBody = new JSONObject();
+        try {
+            jsonBody.put("username", username);
+            jsonBody.put("password", password);
+            // Add other parameters as needed
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, jsonBody,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        // Log the response for debugging
+                        Log.d(TAG, "Response: " + response.toString());
+
+                        String message = response.optString("message");
+
+
+                        if ("Account authorized".equals(message)) {
+                            GoToHomeScreen();
+                        } else {
+                            Toast.makeText(LogInActivity.this, message, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // Handle errors here
+                        Log.e(TAG, "Error: " + error.toString());
+                    }
+                }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                // Add headers if needed
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Content-Type", "application/json");
+                return headers;
+            }
+        };
+
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(request);
+
+
     }
 }
