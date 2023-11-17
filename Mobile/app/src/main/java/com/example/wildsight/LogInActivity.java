@@ -3,6 +3,7 @@ package com.example.wildsight;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -99,6 +100,16 @@ public class LogInActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    private void saveUsername(String username) {
+    SharedPreferences sharedPreferences = getSharedPreferences("MySharedPref", MODE_PRIVATE);
+    SharedPreferences.Editor myEdit = sharedPreferences.edit();
+
+    // Storing the key and its value as the data fetched from edittext
+    myEdit.putString("username", username);
+    myEdit.apply();
+    }
+
+
     private void postDataUsingVolley(String username, String password) {
         customProgressDialog = new Dialog(this);
         customProgressDialog.setContentView(R.layout.custom_progress_dialog);
@@ -129,6 +140,7 @@ public class LogInActivity extends AppCompatActivity {
 
 
                         if ("Account authorized".equals(message)) {
+                            saveUsername(username);
                             GoToHomeScreen();
                         } else {
                             Toast.makeText(LogInActivity.this, message, Toast.LENGTH_SHORT).show();

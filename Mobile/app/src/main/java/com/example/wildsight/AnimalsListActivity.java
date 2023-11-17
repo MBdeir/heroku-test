@@ -107,8 +107,8 @@ public class AnimalsListActivity extends AppCompatActivity{
             e.printStackTrace();
         }
     }
-
-
-
-
+    public void GoToFavorites(View view){
+        Intent intent = new Intent(this, FavoritesActivity.class);
+        startActivity(intent);
+    }
 }
