@@ -142,7 +142,7 @@
                 android:background="@drawable/rounded_corners"
                 android:layout_gravity="center">
                 <ImageView
-                    android:id="@+id/cameraIcon"
+                    android:id="@+id/cameraBtn"
                     android:layout_width="match_parent"
                     android:layout_height="129dp"
                     android:contentDescription="Camera"
