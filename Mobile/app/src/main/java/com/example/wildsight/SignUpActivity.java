@@ -1,6 +1,9 @@
 package com.example.wildsight;
 
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -28,6 +31,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 public class SignUpActivity extends AppCompatActivity {
+    private Dialog customProgressDialog;
 
     EditText usernameEdit;
     EditText passwordEdit;
@@ -96,6 +100,11 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void postDataUsingVolley(String username, String password, String email) {
+        customProgressDialog = new Dialog(this);
+        customProgressDialog.setContentView(R.layout.custom_progress_dialog);
+        customProgressDialog.setCancelable(false);
+        customProgressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        customProgressDialog.show();
 
         String url = "https://wildsight.onrender.com/create_account";
 
@@ -126,7 +135,9 @@ public class SignUpActivity extends AppCompatActivity {
                             Toast.makeText(SignUpActivity.this, message, Toast.LENGTH_SHORT).show();
                             GoToHomeScreen();
                         }
+                        customProgressDialog.dismiss();
                     }
+
                 },
                 new Response.ErrorListener() {
                     @Override

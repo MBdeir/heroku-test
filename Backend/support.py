@@ -116,6 +116,8 @@ def user_login(username, password):
             stmt = stmt.bindparams(username=username, password=password)
             result = conn.execute(stmt)
             message = result.fetchone()[0]
+            conn.commit()
+
             return message
         except Exception as e:
                 return "Either the username doesn't exist, or the password doesn't match."
@@ -133,12 +135,10 @@ def create_account(username, email, password):
             result = conn.execute(stmt)
             message = result.fetchone()[0]
 
-            # Commit the transaction
             conn.commit()
 
             return message
         except Exception as e:
-            # Rollback in case of error
             conn.rollback()
             if "Username already exists." in str(e):
                 return "Username already exists."
