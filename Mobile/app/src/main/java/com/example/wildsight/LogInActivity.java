@@ -75,7 +75,7 @@ public class LogInActivity extends AppCompatActivity {
                     Toast.makeText(LogInActivity.this, "password is required", Toast.LENGTH_SHORT).show();
                     return;
                 }
-
+                GoToHomeScreen();
                 postDataUsingVolley(usernameEdit.getText().toString(), passwordEdit.getText().toString());
             }
         });

@@ -116,7 +116,6 @@ def user_login(username, password):
             stmt = stmt.bindparams(username=username, password=password)
             result = conn.execute(stmt)
             message = result.fetchone()[0]
-            conn.commit()
 
             return message
         except Exception as e:
