@@ -18,8 +18,10 @@ import android.widget.Toast;
 import android.Manifest;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.StringRequest;
@@ -173,8 +175,17 @@ public class HomePageActivity extends AppCompatActivity {
                 },
                 error -> {
                     customProgressDialog.dismiss();
-                    showToast("Network error: " + error.getMessage());
-                });
+                    showToast("Network error: " + (error.getMessage() != null ? error.getMessage() : "Unknown error"));
+                }) {
+
+            @Override
+            public RetryPolicy getRetryPolicy() {
+                return new DefaultRetryPolicy(
+                        10000, // Timeout in milliseconds (e.g., 5000ms or 5 seconds)
+                        DefaultRetryPolicy.DEFAULT_MAX_RETRIES, // Number of retries (e.g., 1 or 2)
+                        DefaultRetryPolicy.DEFAULT_BACKOFF_MULT); // Backoff multiplier
+            }
+        };
 
         Volley.newRequestQueue(this).add(volleyMultipartRequest);
 
