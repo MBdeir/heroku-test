@@ -3,6 +3,8 @@ package com.example.wildsight;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,7 +22,7 @@ public class FunFactsActivity extends AppCompatActivity {
     ImageView secondaryImage;
     TextView fact;
 
-    ImageView next;
+    Button button;
     ImageView prev;
 
     @Override
@@ -31,11 +33,9 @@ public class FunFactsActivity extends AppCompatActivity {
         primaryImage = findViewById(R.id.primaryImage);
         secondaryImage = findViewById(R.id.imageView4);
         fact = findViewById(R.id.textView);
-        next = findViewById(R.id.imageView3);
-        prev = findViewById(R.id.prev);
+        button = findViewById(R.id.button3);
 
-        next.setOnClickListener(View -> loadInfo());
-        prev.setOnClickListener(View -> loadInfo());
+        button.setOnClickListener(View -> loadInfo());
 
     }
 

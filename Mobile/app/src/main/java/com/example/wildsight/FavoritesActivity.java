@@ -103,7 +103,7 @@ public class FavoritesActivity extends AppCompatActivity{
 
     private void addAnimalToView(JSONObject animal) {
         try {
-            View itemView = getLayoutInflater().inflate(R.layout.item_layout, null);
+            View itemView = getLayoutInflater().inflate(R.layout.item_layout_favourite, null);
             final ImageView itemImage = itemView.findViewById(R.id.itemImage);
             TextView itemName = itemView.findViewById(R.id.itemName);
             TextView moreInfoButton = itemView.findViewById(R.id.moreInfoButton);
