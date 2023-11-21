@@ -82,10 +82,10 @@ def get_favourite_animals(username):
             result = conn.execute(stmt, {"username": username})
             animals = result.fetchall()
             
-            # Format the result
-            formatted_result = {}
+            formatted_result = []
             for animal in animals:
-                formatted_result[animal.category] = {
+                animal_info = {
+                    "category": animal.category,
                     "shortDescription": animal.shortDescription,
                     "habitat": animal.habitat,
                     "diet": animal.diet,
@@ -93,18 +93,21 @@ def get_favourite_animals(username):
                     "type": animal.type,
                     "lifeSpan": animal.lifeSpan,
                     "weight": animal.weight,
-                    "top_speed": animal.top_Speed
+                    "top_speed": animal.top_Speed,
+                    "image": animal.image 
                 }
+                formatted_result.append(animal_info)
 
             return formatted_result
         except Exception as e:
             print(f"An error occurred: {e}")
-            return {}
+            return []
         finally:
             conn.close()
     else:
         print("Connection string not found in environment variables.")
-        return {}
+        return []
+
 
 
 
