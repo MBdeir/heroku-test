@@ -44,13 +44,14 @@ async def animal_info(name: str):
 class UserFavouritesRequest(BaseModel):
     username: str
 
-@app.get("/fav_animals")
+@app.post("/fav_animals")
 async def user_favourites(request: UserFavouritesRequest):
     favourites = get_favourite_animals(request.username)
     if favourites:
         return favourites
     else:
         raise HTTPException(status_code=404, detail="No favourites found or an error occurred.")
+
 
 
 class LoginRequest(BaseModel):
