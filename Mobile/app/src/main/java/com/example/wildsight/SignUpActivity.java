@@ -103,8 +103,6 @@ public class SignUpActivity extends AppCompatActivity {
     private void saveUsername(String username) {
         SharedPreferences sharedPreferences = getSharedPreferences("MySharedPref", MODE_PRIVATE);
         SharedPreferences.Editor myEdit = sharedPreferences.edit();
-
-        // Storing the key and its value as the data fetched from edittext
         myEdit.putString("username", username);
         myEdit.apply();
     }
@@ -118,7 +116,6 @@ public class SignUpActivity extends AppCompatActivity {
 
         String url = "https://wildsight.onrender.com/create_account";
 
-        // Replace the JSON object with your actual request body
         JSONObject jsonBody = new JSONObject();
         try {
             jsonBody.put("username", username);
@@ -133,19 +130,15 @@ public class SignUpActivity extends AppCompatActivity {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        // Log the response for debugging
                         Log.d(TAG, "Response: " + response.toString());
 
                         String message = response.optString("message");
-
-
                         if ("Account created successfully.".equals(message)) {
                             GoToHomeScreen();
                             saveUsername(username);
                         } else {
                             Toast.makeText(SignUpActivity.this, message, Toast.LENGTH_SHORT).show();
                             saveUsername(username);
-                            GoToHomeScreen();
                         }
                         customProgressDialog.dismiss();
                     }
@@ -156,6 +149,8 @@ public class SignUpActivity extends AppCompatActivity {
                     public void onErrorResponse(VolleyError error) {
                         // Handle errors here
                         Log.e(TAG, "Error: " + error.toString());
+                        customProgressDialog.dismiss();
+
                     }
                 }) {
             @Override

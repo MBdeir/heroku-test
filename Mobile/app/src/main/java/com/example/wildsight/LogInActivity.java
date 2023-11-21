@@ -151,7 +151,7 @@ public class LogInActivity extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        // Handle errors here
+                        customProgressDialog.dismiss();
                         Log.e(TAG, "Error: " + error.toString());
                     }
                 }) {
