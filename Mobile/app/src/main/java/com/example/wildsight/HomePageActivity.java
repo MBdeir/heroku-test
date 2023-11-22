@@ -2,6 +2,7 @@ package com.example.wildsight;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -21,6 +22,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
@@ -28,6 +30,7 @@ import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -37,9 +40,11 @@ import java.io.FileOutputStream;
 public class HomePageActivity extends AppCompatActivity {
     ImageView btnCam, plusIcon;
     Button signOut;
+    Intent Favintent;
     private Dialog customProgressDialog;
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int PICK_IMAGE = 2;
+    RequestQueue requestQueue;
     private static final int REQUEST_CAMERA_AND_STORAGE_PERMISSION = 1001;
 
     private void requestCameraAndStoragePermissions() {
@@ -83,8 +88,10 @@ public class HomePageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.home_page);
+        requestQueue = Volley.newRequestQueue(this);
         // Request both storage and camera permissions
         requestCameraAndStoragePermissions();
+        getFavorites();
         btnCam = findViewById(R.id.cameraBtn);
         plusIcon = findViewById(R.id.plusIcon);
         signOut = findViewById(R.id.signOutButton);
@@ -283,10 +290,37 @@ public class HomePageActivity extends AppCompatActivity {
     private void showToast(String message) {
         runOnUiThread(() -> Toast.makeText(HomePageActivity.this, message, Toast.LENGTH_LONG).show());
     }
+    private String getSavedUsername() {
+        SharedPreferences sharedPreferences = getSharedPreferences("MySharedPref", MODE_PRIVATE);
+        return sharedPreferences.getString("username", null); // Returns null if no username is found
+    }
+    private void getFavorites(){
+        JSONObject jsonRequest = new JSONObject();
+        try {
+            jsonRequest.put("username", getSavedUsername());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        String url = "https://wildsight.onrender.com/fav_animals";
+        // Change to JsonArrayRequest
+        JsonArrayPostRequest jsonArrayPostRequest = new JsonArrayPostRequest(Request.Method.POST, url, jsonRequest, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
 
+                Favintent = new Intent(HomePageActivity.this, AnimalsListActivity.class);
+                Favintent.putExtra("favorites", response.toString());
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                customProgressDialog.dismiss();
+            }
+        });
+        requestQueue.add(jsonArrayPostRequest);
+    }
     public void DiscoverAnimals(View view) {
-        Intent intent = new Intent(this, AnimalsListActivity.class);
-        startActivity(intent);
+        startActivity(Favintent);
     }
 
     public void FunFacts(View view) {

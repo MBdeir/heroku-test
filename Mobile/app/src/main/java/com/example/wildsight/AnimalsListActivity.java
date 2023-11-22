@@ -32,6 +32,7 @@ import org.json.JSONObject;
 public class AnimalsListActivity extends AppCompatActivity{
     LinearLayout itemContainer;
     RequestQueue requestQueue;
+    private static JSONArray favorites = null;
     private Dialog customProgressDialog;
     private static JSONArray cachedAnimalsData = null; // Add this line
 
@@ -42,6 +43,16 @@ public class AnimalsListActivity extends AppCompatActivity{
         setContentView(R.layout.animals_list);
         itemContainer = findViewById(R.id.itemContainer);
         requestQueue = Volley.newRequestQueue(this);
+        Intent intent = getIntent();
+        if (intent.hasExtra("favorites")) {
+            String favoritesJsonString = intent.getStringExtra("favorites");
+
+            try {
+                 favorites = new JSONArray(favoritesJsonString);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
         fetchAnimals();
 
     }
@@ -96,6 +107,23 @@ public class AnimalsListActivity extends AppCompatActivity{
         }
         customProgressDialog.dismiss();
     }
+
+    private static boolean containsObject(JSONArray jsonArray, JSONObject jsonObject) {
+        for (int i = 0; i < jsonArray.length(); i++) {
+            try {
+                // Compare JSONObjects
+                if (jsonObjectSimilar(jsonArray.getJSONObject(i), jsonObject)) {
+                    return true;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
+    private static boolean jsonObjectSimilar(JSONObject obj1, JSONObject obj2) {
+        return obj1.toString().equals(obj2.toString());
+    }
     private void addAnimalToView(JSONObject animal) {
         try {
             View itemView = getLayoutInflater().inflate(R.layout.item_layout, null);
@@ -104,6 +132,9 @@ public class AnimalsListActivity extends AppCompatActivity{
             TextView moreInfoButton = itemView.findViewById(R.id.moreInfoButton);
             TextView descriptionText = itemView.findViewById(R.id.descriptionText);
             ImageView heart = itemView.findViewById(R.id.favorite);
+            if(containsObject(favorites,animal)){
+                heart.setImageResource(R.drawable.white_filled_heart_icon);
+            }
             itemName.setText(animal.getString("category"));
             descriptionText.setText(animal.getString("shortDescription"));
 
@@ -157,6 +188,7 @@ public class AnimalsListActivity extends AppCompatActivity{
             Space space = new Space(this);
             space.setMinimumHeight(20);
             itemContainer.addView(space);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -200,6 +232,5 @@ public class AnimalsListActivity extends AppCompatActivity{
 
         requestQueue.add(jsonArrayPostRequest);
     }
-
 
 }
