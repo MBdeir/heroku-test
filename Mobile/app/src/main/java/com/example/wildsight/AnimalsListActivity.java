@@ -33,6 +33,7 @@ public class AnimalsListActivity extends AppCompatActivity{
     LinearLayout itemContainer;
     RequestQueue requestQueue;
     private Dialog customProgressDialog;
+    private static JSONArray cachedAnimalsData = null; // Add this line
 
 
     @Override
@@ -55,6 +56,10 @@ public class AnimalsListActivity extends AppCompatActivity{
         customProgressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         customProgressDialog.show();
         String url = "https://wildsight.onrender.com/all_animals";
+        if (cachedAnimalsData != null) {
+            populateAnimals(cachedAnimalsData);
+            return;
+        }
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
@@ -67,6 +72,7 @@ public class AnimalsListActivity extends AppCompatActivity{
                     e.printStackTrace();
                 }
                 customProgressDialog.dismiss();
+                cachedAnimalsData = response;
 
             }
 
@@ -79,7 +85,17 @@ public class AnimalsListActivity extends AppCompatActivity{
 
         requestQueue.add(jsonArrayRequest);
     }
-
+    private void populateAnimals(JSONArray response) {
+        try {
+            for (int i = 0; i < response.length(); i++) {
+                JSONObject animal = response.getJSONObject(i);
+                addAnimalToView(animal);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        customProgressDialog.dismiss();
+    }
     private void addAnimalToView(JSONObject animal) {
         try {
             View itemView = getLayoutInflater().inflate(R.layout.item_layout, null);

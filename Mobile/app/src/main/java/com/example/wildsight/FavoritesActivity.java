@@ -60,7 +60,6 @@ public class FavoritesActivity extends AppCompatActivity{
 
         String username = getSavedUsername();
         if (username == null) {
-            // Handle the case where username is not found
             customProgressDialog.dismiss();
             return;
         }
