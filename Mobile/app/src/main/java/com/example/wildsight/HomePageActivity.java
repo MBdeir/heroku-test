@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import androidx.annotation.NonNull;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 import android.Manifest;
@@ -35,6 +36,7 @@ import java.io.FileOutputStream;
 
 public class HomePageActivity extends AppCompatActivity {
     ImageView btnCam, plusIcon;
+    Button signOut;
     private Dialog customProgressDialog;
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int PICK_IMAGE = 2;
@@ -71,6 +73,10 @@ public class HomePageActivity extends AppCompatActivity {
             }
         }
     }
+    private void signOut(View view){
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +87,14 @@ public class HomePageActivity extends AppCompatActivity {
         requestCameraAndStoragePermissions();
         btnCam = findViewById(R.id.cameraBtn);
         plusIcon = findViewById(R.id.plusIcon);
+        signOut = findViewById(R.id.signOutButton);
+
+        signOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                signOut(view);
+            }
+        });
 
         btnCam.setOnClickListener(view -> {
             try {
