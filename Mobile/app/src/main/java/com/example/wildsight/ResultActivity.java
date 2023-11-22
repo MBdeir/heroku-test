@@ -68,11 +68,14 @@ public class ResultActivity extends AppCompatActivity {
             // Example: You may use a library like Picasso or Glide to efficiently load images.
             // For simplicity, here is a basic approach using the file path:
             if (!imagePath.isEmpty()) {
-                Picasso.get()
-                        .load(imagePath)
-                        .into(imageView);
-                imageView.setImageURI(Uri.parse(imagePath));
-        }
+                if (imagePath.startsWith("http://") || imagePath.startsWith("https://")) {
+                    Picasso.get()
+                            .load(imagePath)
+                            .into(imageView);
+                } else {
+                    imageView.setImageURI(Uri.parse(imagePath));
+                }
+            }
     }
 }
 }
