@@ -71,7 +71,8 @@ public class ResultActivity extends AppCompatActivity {
                 Picasso.get()
                         .load(imagePath)
                         .into(imageView);
-            }
+                imageView.setImageURI(Uri.parse(imagePath));
         }
     }
+}
 }
