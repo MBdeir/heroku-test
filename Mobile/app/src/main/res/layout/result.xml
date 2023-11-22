@@ -28,7 +28,7 @@
         app:layout_constraintTop_toTopOf="parent" />
         <TextView
             android:id="@+id/name"
-            android:textSize="40sp"
+            android:textSize="50sp"
             android:textColor="@color/baby_blue"
             android:textStyle="bold"
             android:layout_width="wrap_content"
@@ -37,7 +37,9 @@
             android:layout_marginLeft="20dp"
             android:text="Whale!!"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/backButton" />
+            app:layout_constraintTop_toBottomOf="@+id/backButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
 
 
         <com.google.android.material.imageview.ShapeableImageView
@@ -52,11 +54,12 @@
             android:scaleType="fitCenter"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/name"
+            app:layout_constraintEnd_toEndOf="parent"
             app:shapeAppearanceOverlay="@style/RoundedSquare"
             app:srcCompat="@drawable/whale_image" />
         <TextView
             android:id="@+id/title1"
-            android:textSize="15sp"
+            android:textSize="20sp"
             android:textColor="@color/baby_blue"
             android:textStyle="bold"
             android:layout_width="wrap_content"
@@ -85,14 +88,14 @@
                 android:text="@string/testing"
                 android:padding="16dp"
                 android:textColor="#FFFFFF"
-                android:textSize="10sp" />
+                android:textSize="15sp" />
 
 
         </RelativeLayout>
 
         <TextView
             android:id="@+id/title2"
-            android:textSize="15sp"
+            android:textSize="20sp"
             android:textColor="@color/baby_blue"
             android:textStyle="bold"
             android:layout_width="wrap_content"
@@ -120,13 +123,13 @@
                 android:text="@string/t1"
                 android:padding="16dp"
                 android:textColor="#FFFFFF"
-                android:textSize="10sp" />
+                android:textSize="15sp" />
 
 
         </RelativeLayout>
         <TextView
             android:id="@+id/title3"
-            android:textSize="15sp"
+            android:textSize="20sp"
             android:textColor="@color/baby_blue"
             android:textStyle="bold"
             android:layout_width="wrap_content"
@@ -154,13 +157,13 @@
                 android:text="@string/t2"
                 android:padding="16dp"
                 android:textColor="#FFFFFF"
-                android:textSize="10sp" />
+                android:textSize="15sp" />
 
 
         </RelativeLayout>
         <TextView
             android:id="@+id/title4"
-            android:textSize="15sp"
+            android:textSize="20sp"
             android:textColor="@color/baby_blue"
             android:textStyle="bold"
             android:layout_width="wrap_content"
@@ -188,13 +191,13 @@
                 android:text="@string/t3"
                 android:padding="16dp"
                 android:textColor="#FFFFFF"
-                android:textSize="10sp" />
+                android:textSize="15sp" />
 
 
         </RelativeLayout>
         <TextView
             android:id="@+id/title5"
-            android:textSize="15sp"
+            android:textSize="20sp"
             android:textColor="@color/baby_blue"
             android:textStyle="bold"
             android:layout_width="wrap_content"
@@ -222,11 +225,11 @@
                 android:text="@string/t4"
                 android:padding="16dp"
                 android:textColor="#FFFFFF"
-                android:textSize="10sp" />
+                android:textSize="15sp" />
         </RelativeLayout>
         <TextView
             android:id="@+id/title6"
-            android:textSize="15sp"
+            android:textSize="20sp"
             android:textColor="@color/baby_blue"
             android:textStyle="bold"
             android:layout_width="wrap_content"
@@ -254,13 +257,13 @@
                 android:text="@string/t5"
                 android:padding="16dp"
                 android:textColor="#FFFFFF"
-                android:textSize="10sp" />
+                android:textSize="15sp" />
 
 
         </RelativeLayout>
         <TextView
             android:id="@+id/title7"
-            android:textSize="15sp"
+            android:textSize="20sp"
             android:textColor="@color/baby_blue"
             android:textStyle="bold"
             android:layout_width="wrap_content"
@@ -288,13 +291,13 @@
                 android:text="@string/t6"
                 android:padding="16dp"
                 android:textColor="#FFFFFF"
-                android:textSize="10sp" />
+                android:textSize="15sp" />
 
 
         </RelativeLayout>
         <TextView
             android:id="@+id/title8"
-            android:textSize="15sp"
+            android:textSize="20sp"
             android:textColor="@color/baby_blue"
             android:textStyle="bold"
             android:layout_width="wrap_content"
@@ -322,7 +325,7 @@
                 android:text="@string/t7"
                 android:padding="16dp"
                 android:textColor="#FFFFFF"
-                android:textSize="10sp" />
+                android:textSize="15sp" />
 
 
         </RelativeLayout>
