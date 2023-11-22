@@ -82,7 +82,7 @@
 
         <EditText
             android:id="@+id/username_input"
-            android:layout_width="352dp"
+            android:layout_width="298dp"
             android:layout_height="48dp"
             android:layout_marginLeft="16dp"
             android:layout_marginTop="14dp"
@@ -102,7 +102,7 @@
 
         <EditText
             android:id="@+id/email_input"
-            android:layout_width="352dp"
+            android:layout_width="298dp"
             android:layout_height="48dp"
             android:layout_marginLeft="16dp"
             android:layout_marginTop="14dp"
@@ -122,7 +122,7 @@
 
         <EditText
             android:id="@+id/password_input"
-            android:layout_width="352dp"
+            android:layout_width="298dp"
             android:layout_height="48dp"
             android:layout_marginLeft="16dp"
             android:layout_marginTop="14dp"
