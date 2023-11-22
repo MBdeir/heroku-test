@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.imageview.ShapeableImageView;
+import com.squareup.picasso.Picasso;
 
 public class ResultActivity extends AppCompatActivity {
     Button backBtn;
@@ -67,7 +68,9 @@ public class ResultActivity extends AppCompatActivity {
             // Example: You may use a library like Picasso or Glide to efficiently load images.
             // For simplicity, here is a basic approach using the file path:
             if (!imagePath.isEmpty()) {
-                imageView.setImageURI(Uri.parse(imagePath));
+                Picasso.get()
+                        .load(imagePath)
+                        .into(imageView);
             }
         }
     }

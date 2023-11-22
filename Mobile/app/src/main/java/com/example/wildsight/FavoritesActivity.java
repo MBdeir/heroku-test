@@ -125,7 +125,27 @@ public class FavoritesActivity extends AppCompatActivity{
                     }
                 }
             });
-
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(FavoritesActivity.this, ResultActivity.class);
+                    try {
+                        intent.putExtra("name", animal.getString("category")); // Use "category" instead of "name"
+                        intent.putExtra("shortDescription", animal.getString("shortDescription"));
+                        intent.putExtra("habitat", animal.getString("habitat"));
+                        intent.putExtra("diet", animal.getString("diet"));
+                        intent.putExtra("location", animal.getString("location"));
+                        intent.putExtra("type", animal.getString("type"));
+                        intent.putExtra("lifeSpan", animal.getString("lifeSpan"));
+                        intent.putExtra("weight", animal.getString("weight"));
+                        intent.putExtra("topSpeed", animal.getString("top_speed")); // Note the underscore in "top_speed"
+                        intent.putExtra("imagePath", animal.getString("image"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    startActivity(intent);
+                }
+            });
             itemContainer.addView(itemView);
             Space space = new Space(this);
             space.setMinimumHeight(20);

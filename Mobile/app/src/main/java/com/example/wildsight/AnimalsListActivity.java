@@ -131,6 +131,27 @@ public class AnimalsListActivity extends AppCompatActivity{
                 }
             });
 
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(AnimalsListActivity.this, ResultActivity.class);
+                    try {
+                        intent.putExtra("name", animal.getString("category")); // Use "category" instead of "name"
+                        intent.putExtra("shortDescription", animal.getString("shortDescription"));
+                        intent.putExtra("habitat", animal.getString("habitat"));
+                        intent.putExtra("diet", animal.getString("diet"));
+                        intent.putExtra("location", animal.getString("location"));
+                        intent.putExtra("type", animal.getString("type"));
+                        intent.putExtra("lifeSpan", animal.getString("lifeSpan"));
+                        intent.putExtra("weight", animal.getString("weight"));
+                        intent.putExtra("topSpeed", animal.getString("top_speed")); // Note the underscore in "top_speed"
+                        intent.putExtra("imagePath", animal.getString("image"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    startActivity(intent);
+                }
+            });
 
             itemContainer.addView(itemView);
             Space space = new Space(this);
@@ -145,16 +166,9 @@ public class AnimalsListActivity extends AppCompatActivity{
         startActivity(intent);
     }
     public void AddToFavorites(String username, String animal){
-        customProgressDialog = new Dialog(this);
-        customProgressDialog.setContentView(R.layout.custom_progress_dialog);
-        customProgressDialog.setCancelable(false);
-        customProgressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        customProgressDialog.show();
 
         String url = "https://wildsight.onrender.com/add_favourite_animal";
         if (username == null) {
-            // Handle the case where username is not found
-            customProgressDialog.dismiss();
             return;
         }
         JSONObject jsonRequest = new JSONObject();
@@ -163,7 +177,6 @@ public class AnimalsListActivity extends AppCompatActivity{
             jsonRequest.put("animal", animal);
         } catch (JSONException e) {
             e.printStackTrace();
-            customProgressDialog.dismiss();
             return;
         }
         JsonArrayPostRequest jsonArrayPostRequest = new JsonArrayPostRequest(Request.Method.POST, url, jsonRequest, new Response.Listener<JSONArray>() {
@@ -177,13 +190,11 @@ public class AnimalsListActivity extends AppCompatActivity{
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                customProgressDialog.dismiss();
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
-                customProgressDialog.dismiss();
             }
         });
 
