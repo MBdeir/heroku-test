@@ -2,6 +2,7 @@ package com.example.wildsight;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -24,6 +25,7 @@ import com.android.volley.toolbox.Volley;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 
@@ -40,6 +42,11 @@ public class AnimalsListActivity extends AppCompatActivity{
         itemContainer = findViewById(R.id.itemContainer);
         requestQueue = Volley.newRequestQueue(this);
         fetchAnimals();
+
+    }
+    private String getSavedUsername() {
+        SharedPreferences sharedPreferences = getSharedPreferences("MySharedPref", MODE_PRIVATE);
+        return sharedPreferences.getString("username", null); // Returns null if no username is found
     }
     private void fetchAnimals() {
         customProgressDialog = new Dialog(this);
@@ -80,7 +87,7 @@ public class AnimalsListActivity extends AppCompatActivity{
             TextView itemName = itemView.findViewById(R.id.itemName);
             TextView moreInfoButton = itemView.findViewById(R.id.moreInfoButton);
             TextView descriptionText = itemView.findViewById(R.id.descriptionText);
-
+            ImageView heart = itemView.findViewById(R.id.favorite);
             itemName.setText(animal.getString("category"));
             descriptionText.setText(animal.getString("shortDescription"));
 
@@ -98,6 +105,16 @@ public class AnimalsListActivity extends AppCompatActivity{
                     }
                 }
             });
+            heart.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View view){
+                    heart.setImageResource(R.drawable.white_filled_heart_icon);
+                    String username= getSavedUsername();
+                    String animal= itemName.getText().toString();
+                    AddToFavorites(username,  animal);
+                }
+            });
+
 
             itemContainer.addView(itemView);
             Space space = new Space(this);
@@ -111,4 +128,51 @@ public class AnimalsListActivity extends AppCompatActivity{
         Intent intent = new Intent(this, FavoritesActivity.class);
         startActivity(intent);
     }
+    public void AddToFavorites(String username, String animal){
+        customProgressDialog = new Dialog(this);
+        customProgressDialog.setContentView(R.layout.custom_progress_dialog);
+        customProgressDialog.setCancelable(false);
+        customProgressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        customProgressDialog.show();
+
+        String url = "https://wildsight.onrender.com/add_favourite_animal";
+        if (username == null) {
+            // Handle the case where username is not found
+            customProgressDialog.dismiss();
+            return;
+        }
+        JSONObject jsonRequest = new JSONObject();
+        try {
+            jsonRequest.put("username", username);
+            jsonRequest.put("animal", animal);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            customProgressDialog.dismiss();
+            return;
+        }
+        JsonArrayPostRequest jsonArrayPostRequest = new JsonArrayPostRequest(Request.Method.POST, url, jsonRequest, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                try {
+
+                    JSONObject animal = response.getJSONObject(0);
+                    addAnimalToView(animal);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                customProgressDialog.dismiss();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                customProgressDialog.dismiss();
+            }
+        });
+
+        requestQueue.add(jsonArrayPostRequest);
+    }
+
+
 }
