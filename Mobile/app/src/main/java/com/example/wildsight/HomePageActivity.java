@@ -38,13 +38,14 @@ public class HomePageActivity extends AppCompatActivity {
     private Dialog customProgressDialog;
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int PICK_IMAGE = 2;
-    private static final int PERMISSION_REQUEST_STORAGE = 1000;
+    private static final int REQUEST_CAMERA_AND_STORAGE_PERMISSION = 1001;
 
-
-    private void requestStoragePermission() {
+    private void requestCameraAndStoragePermissions() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_STORAGE);
+            if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
+                    checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        REQUEST_CAMERA_AND_STORAGE_PERMISSION);
             }
         }
     }
@@ -53,12 +54,20 @@ public class HomePageActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == PERMISSION_REQUEST_STORAGE) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permission granted
+        if (requestCode == REQUEST_CAMERA_AND_STORAGE_PERMISSION) {
+            boolean allPermissionsGranted = true;
+            for (int result : grantResults) {
+                if (result != PackageManager.PERMISSION_GRANTED) {
+                    allPermissionsGranted = false;
+                    break;
+                }
+            }
+
+            if (allPermissionsGranted) {
+                // Permissions granted
             } else {
-                // Permission denied
-                Toast.makeText(this, "Storage permission is required to access photos.", Toast.LENGTH_SHORT).show();
+                // Permissions denied
+                Toast.makeText(this, "Permissions are required to access files and camera.", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -66,8 +75,10 @@ public class HomePageActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.home_page);
-        requestStoragePermission();
+        // Request both storage and camera permissions
+        requestCameraAndStoragePermissions();
         btnCam = findViewById(R.id.cameraBtn);
         plusIcon = findViewById(R.id.plusIcon);
 
@@ -75,19 +86,20 @@ public class HomePageActivity extends AppCompatActivity {
             try {
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 if (intent.resolveActivity(getPackageManager()) != null) {
-                    startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
+                    startActivityForResult(intent, 1);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
         });
         plusIcon.setOnClickListener(view -> {
+            // Calling intent on below line.
             Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-            if (intent.resolveActivity(getPackageManager()) != null) {
-                startActivityForResult(intent, PICK_IMAGE);
-            }
+            // Starting activity on below line.
+            startActivityForResult(intent, 2);
         });
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -256,12 +268,6 @@ public class HomePageActivity extends AppCompatActivity {
 
     private void showToast(String message) {
         runOnUiThread(() -> Toast.makeText(HomePageActivity.this, message, Toast.LENGTH_LONG).show());
-    }
-
-    // Example method to update UI
-    private void showResult(String message) {
-        // Update your UI with the message
-        // This could be showing a dialog, updating a TextView, etc.
     }
 
     public void DiscoverAnimals(View view) {
