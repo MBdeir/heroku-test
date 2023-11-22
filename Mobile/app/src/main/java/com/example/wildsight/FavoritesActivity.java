@@ -155,7 +155,6 @@ public class FavoritesActivity extends AppCompatActivity{
         }
     }
     public void GoToCategories(View view){
-        Intent intent = new Intent(this, AnimalsListActivity.class);
-        startActivity(intent);
+        finish();
     }
 }
