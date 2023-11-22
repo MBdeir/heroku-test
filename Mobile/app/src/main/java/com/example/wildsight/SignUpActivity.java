@@ -19,6 +19,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.RequestQueue;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -162,7 +163,12 @@ public class SignUpActivity extends AppCompatActivity {
             }
         };
 
-
+        request.setRetryPolicy(new DefaultRetryPolicy(
+                10000, // Timeout in milliseconds (10 seconds)
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES, // Default retry count
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT // Default backoff multiplier
+        ));
+        
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(request);
 
