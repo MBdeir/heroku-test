@@ -127,7 +127,7 @@ public class AnimalsListActivity extends AppCompatActivity{
                     heart.setImageResource(R.drawable.white_filled_heart_icon);
                     String username= getSavedUsername();
                     String animal= itemName.getText().toString();
-                    AddToFavorites(username,  animal);
+                    AddToFavorites(username, animal);
                 }
             });
 
