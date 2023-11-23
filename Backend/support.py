@@ -159,21 +159,23 @@ def add_user_favourite(username, animal):
         try:
             stmt = text("EXEC ws.spUserFavouritesAnimal :username, :animal")
             stmt = stmt.bindparams(username=username, animal=animal)
-            conn.execute(stmt)
-            conn.commit()
+            result = conn.execute(stmt).fetchone()[0]  # Execute the stored procedure and get the result
 
-            return "Favourite animal added successfully."
+            if result == 1:
+                message = "Favourite animal removed successfully."
+            elif result == 2:
+                message = "Favourite animal added successfully."
+            else:
+                message = "Unexpected result from the stored procedure."
+
+            conn.commit()
+            return message
+
         except Exception as e:
             conn.rollback()
             error_message = str(e)
-            if "50001" in error_message:
-                return "User already favourited this animal."
-            elif "50002" in error_message:
-                return "This animal doesnt exist."
-        finally:
-            conn.close()
-    else:
-        return "Connection string not found in environment variables."
+           
+
 
 def classify_image_from_data(image_data, model):
     with open("temp_image.jpg", "wb") as f:
