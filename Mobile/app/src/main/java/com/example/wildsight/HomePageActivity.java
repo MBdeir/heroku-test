@@ -306,21 +306,29 @@ public class HomePageActivity extends AppCompatActivity {
         JsonArrayPostRequest jsonArrayPostRequest = new JsonArrayPostRequest(Request.Method.POST, url, jsonRequest, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
+                if(response!=null){
+                    Favintent = new Intent(HomePageActivity.this, AnimalsListActivity.class);
+                    Favintent.putExtra("favorites", response.toString());
+                }
 
-                Favintent = new Intent(HomePageActivity.this, AnimalsListActivity.class);
-                Favintent.putExtra("favorites", response.toString());
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
-                customProgressDialog.dismiss();
             }
         });
         requestQueue.add(jsonArrayPostRequest);
     }
     public void DiscoverAnimals(View view) {
-        startActivity(Favintent);
+        if(Favintent!=null){
+            startActivity(Favintent);
+        }
+        else{
+            Intent intent = new Intent(this, AnimalsListActivity.class);
+            startActivity(intent);
+        }
+
     }
 
     public void FunFacts(View view) {

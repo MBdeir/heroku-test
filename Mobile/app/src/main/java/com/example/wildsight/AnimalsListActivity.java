@@ -44,7 +44,7 @@ public class AnimalsListActivity extends AppCompatActivity{
         itemContainer = findViewById(R.id.itemContainer);
         requestQueue = Volley.newRequestQueue(this);
         Intent intent = getIntent();
-        if (intent.hasExtra("favorites")) {
+        if (intent!=null && intent.hasExtra("favorites")) {
             String favoritesJsonString = intent.getStringExtra("favorites");
 
             try {
@@ -132,7 +132,7 @@ public class AnimalsListActivity extends AppCompatActivity{
             TextView moreInfoButton = itemView.findViewById(R.id.moreInfoButton);
             TextView descriptionText = itemView.findViewById(R.id.descriptionText);
             ImageView heart = itemView.findViewById(R.id.favorite);
-            if(containsObject(favorites,animal)){
+            if(favorites !=null && containsObject(favorites,animal)){
                 heart.setImageResource(R.drawable.white_filled_heart_icon);
             }
             itemName.setText(animal.getString("category"));
