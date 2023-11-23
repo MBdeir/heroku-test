@@ -168,7 +168,7 @@ public class SignUpActivity extends AppCompatActivity {
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES, // Default retry count
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT // Default backoff multiplier
         ));
-        
+
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(request);
 

@@ -15,6 +15,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import androidx.annotation.NonNull;
+
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -81,29 +83,37 @@ public class HomePageActivity extends AppCompatActivity {
         }
     }
     private void signOut(View view) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
-        builder.setTitle("Confirm!")
-                .setMessage("Are you sure you want to sign out?")
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // User clicked Yes, perform sign out
-                        Intent intent = new Intent(view.getContext(), MainActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(intent);
-                    }
-                })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // User clicked Cancel, close the dialog and do nothing
-                        dialog.dismiss();
-                    }
-                });
+        // Inflate your custom layout
+        View dialogView = LayoutInflater.from(view.getContext()).inflate(R.layout.dialog_signout, null);
 
-        AlertDialog dialog = builder.create();
+        AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+        builder.setView(dialogView); // Set the custom layout
+
+        final AlertDialog dialog = builder.create();
+
+        // Set up Yes and No buttons
+        Button yesButton = dialogView.findViewById(R.id.yesButton);
+        Button noButton = dialogView.findViewById(R.id.noButton);
+        ImageView logoImageView = dialogView.findViewById(R.id.logoImageView);
+
+        // Customize the logoImageView as necessary, for example, setting a rounded image using Glide or another library
+
+        yesButton.setOnClickListener(v -> {
+            // Handle Yes button click
+            Intent intent = new Intent(view.getContext(), MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            view.getContext().startActivity(intent);
+            dialog.dismiss();
+        });
+
+        noButton.setOnClickListener(v -> {
+            // Handle No button click
+            dialog.dismiss();
+        });
+
         dialog.show();
     }
+
 
 
 
