@@ -1,6 +1,8 @@
 package com.example.wildsight;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -78,10 +80,33 @@ public class HomePageActivity extends AppCompatActivity {
             }
         }
     }
-    private void signOut(View view){
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
+    private void signOut(View view) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+        builder.setTitle("Confirm!")
+                .setMessage("Are you sure you want to sign out?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // User clicked Yes, perform sign out
+                        Intent intent = new Intent(view.getContext(), MainActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // User clicked Cancel, close the dialog and do nothing
+                        dialog.dismiss();
+                    }
+                });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
