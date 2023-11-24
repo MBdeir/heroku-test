@@ -7,11 +7,13 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Space;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -21,6 +23,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.squareup.picasso.Picasso;
 
@@ -211,14 +214,12 @@ public class AnimalsListActivity extends AppCompatActivity{
             e.printStackTrace();
             return;
         }
-        JsonArrayPostRequest jsonArrayPostRequest = new JsonArrayPostRequest(Request.Method.POST, url, jsonRequest, new Response.Listener<JSONArray>() {
+        JsonObjectRequest jsonObjectPostRequest = new JsonObjectRequest(Request.Method.POST, url, jsonRequest, new Response.Listener<JSONObject>() {
             @Override
-            public void onResponse(JSONArray response) {
+            public void onResponse(JSONObject response) {
                 try {
-
-                    JSONObject animal = response.getJSONObject(0);
-                    addAnimalToView(animal);
-
+                    String message = response.getString("message");
+                    Toast.makeText(AnimalsListActivity.this, "Success: " + message, Toast.LENGTH_SHORT).show();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -230,7 +231,7 @@ public class AnimalsListActivity extends AppCompatActivity{
             }
         });
 
-        requestQueue.add(jsonArrayPostRequest);
+        requestQueue.add(jsonObjectPostRequest);
     }
 
 }
