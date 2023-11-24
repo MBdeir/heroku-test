@@ -1,5 +1,7 @@
 package com.example.wildsight;
 
+import static android.content.ContentValues.TAG;
+
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -17,9 +19,10 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.volley.Response.ErrorListener;
+import com.android.volley.Response.Listener;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.JsonArrayRequest;
@@ -31,6 +34,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class AnimalsListActivity extends AppCompatActivity{
     LinearLayout itemContainer;
@@ -74,7 +82,10 @@ public class AnimalsListActivity extends AppCompatActivity{
             populateAnimals(cachedAnimalsData);
             return;
         }
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null,
+
+                new com.android.volley.Response.Listener<JSONArray>() {
+
             @Override
             public void onResponse(JSONArray response) {
                 try {
@@ -90,7 +101,7 @@ public class AnimalsListActivity extends AppCompatActivity{
 
             }
 
-        }, new Response.ErrorListener() {
+        }, new com.android.volley.Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
@@ -162,6 +173,7 @@ public class AnimalsListActivity extends AppCompatActivity{
                     String username= getSavedUsername();
                     String animal= itemName.getText().toString();
                     AddToFavorites(username, animal);
+
                 }
             });
 
@@ -200,38 +212,36 @@ public class AnimalsListActivity extends AppCompatActivity{
         Intent intent = new Intent(this, FavoritesActivity.class);
         startActivity(intent);
     }
-    public void AddToFavorites(String username, String animal){
+     public void AddToFavorites(String username, String animal){
+            ApiService service = RetrofitClientInstance.getRetrofitInstance().create(ApiService.class);
+            FavoriteRequest request = new FavoriteRequest();
+            request.setUsername(username);
+            request.setAnimal(animal);
 
-        String url = "https://wildsight.onrender.com/add_favourite_animal";
-        if (username == null) {
-            return;
-        }
-        JSONObject jsonRequest = new JSONObject();
-        try {
-            jsonRequest.put("username", username);
-            jsonRequest.put("animal", animal);
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return;
-        }
-        JsonObjectRequest jsonObjectPostRequest = new JsonObjectRequest(Request.Method.POST, url, jsonRequest, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                try {
-                    String message = response.getString("message");
-                    Toast.makeText(AnimalsListActivity.this, "Success: " + message, Toast.LENGTH_SHORT).show();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
-            }
-        });
+         Call<FavoriteResponse> call = service.addToFavorites(request);
+         call.enqueue(new Callback<FavoriteResponse>() {
+             @Override
+             public void onResponse(Call<FavoriteResponse> call, Response<FavoriteResponse> response) {
+                 if (response.isSuccessful()) {
+                     FavoriteResponse favoriteResponse = response.body();
+                     Toast.makeText(AnimalsListActivity.this, "Success: " + favoriteResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                 } else {
+                     Log.e(TAG, "AddToFavorites: onResponse - Response not successful. Code: " + response.code());
+                     try {
+                         // Try to get the error body if it exists
+                         String errorBody = response.errorBody() != null ? response.errorBody().string() : "null";
+                         Log.e(TAG, "AddToFavorites: Error Body: " + errorBody);
+                     } catch (IOException e) {
+                         Log.e(TAG, "AddToFavorites: Error while reading error body", e);
+                     }
+                 }
+             }
 
-        requestQueue.add(jsonObjectPostRequest);
-    }
+             @Override
+             public void onFailure(Call<FavoriteResponse> call, Throwable t) {
+                 Log.e(TAG, "AddToFavorites: onFailure", t);
+             }
+         });
+     }
 
 }
