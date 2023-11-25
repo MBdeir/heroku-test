@@ -9,8 +9,11 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Space;
@@ -46,6 +49,7 @@ public class AnimalsListActivity extends AppCompatActivity{
     private static JSONArray favorites = null;
     private Dialog customProgressDialog;
     private static JSONArray cachedAnimalsData = null; // Add this line
+    private EditText searchEditText;
 
 
     @Override
@@ -54,6 +58,24 @@ public class AnimalsListActivity extends AppCompatActivity{
         setContentView(R.layout.animals_list);
         itemContainer = findViewById(R.id.itemContainer);
         requestQueue = Volley.newRequestQueue(this);
+        searchEditText = findViewById(R.id.searchEditText);
+
+        searchEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                filterAnimals(charSequence.toString()); // Call filterAnimals method whenever text changes
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                // Log the text for debugging
+                Log.d("SearchText", "Current search text: " + editable.toString());
+            }
+        });
+
         Intent intent = getIntent();
         if (intent!=null && intent.hasExtra("favorites")) {
             String favoritesJsonString = intent.getStringExtra("favorites");
@@ -71,7 +93,29 @@ public class AnimalsListActivity extends AppCompatActivity{
         SharedPreferences sharedPreferences = getSharedPreferences("MySharedPref", MODE_PRIVATE);
         return sharedPreferences.getString("username", null); // Returns null if no username is found
     }
+
+    private void filterAnimals(String query) {
+        itemContainer.removeAllViews();
+
+        for (int i = 0; i < cachedAnimalsData.length(); i++) {
+            try {
+                JSONObject animal = cachedAnimalsData.getJSONObject(i);
+                String animalName = animal.getString("category");
+                if (animalName.toLowerCase().contains(query.toLowerCase())) {
+                    addAnimalToView(animal);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+
+
     private void fetchAnimals() {
+        itemContainer.removeAllViews();
+
         customProgressDialog = new Dialog(this);
         customProgressDialog.setContentView(R.layout.custom_progress_dialog);
         customProgressDialog.setCancelable(false);

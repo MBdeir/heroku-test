@@ -7,7 +7,11 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Space;
@@ -42,6 +46,7 @@ public class FavoritesActivity extends AppCompatActivity{
         setContentView(R.layout.favorites);
         itemContainer = findViewById(R.id.itemContainer);
         requestQueue = Volley.newRequestQueue(this);
+
         fetchAnimals();
     }
 
@@ -49,6 +54,7 @@ public class FavoritesActivity extends AppCompatActivity{
         SharedPreferences sharedPreferences = getSharedPreferences("MySharedPref", MODE_PRIVATE);
         return sharedPreferences.getString("username", null); // Returns null if no username is found
     }
+
     private void fetchAnimals() {
         customProgressDialog = new Dialog(this);
         customProgressDialog.setContentView(R.layout.custom_progress_dialog);
