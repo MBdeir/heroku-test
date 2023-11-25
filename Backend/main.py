@@ -6,6 +6,7 @@ from roboflow import Roboflow
 from sqlalchemy import create_engine, text
 from fun_facts_data import fun_facts  
 
+
 app = FastAPI()
 
 rf = Roboflow(api_key="08ygxtxy7JYwrrNijLPb")

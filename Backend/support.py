@@ -4,6 +4,7 @@ from PIL import Image
 from roboflow import Roboflow
 from sqlalchemy import create_engine, text
 from fun_facts_data import fun_facts
+from all_animals_data import all_animals
 import random
 
 
@@ -47,31 +48,12 @@ def get_random_fact():
         return None
 
 
-
-
-
-
-
-
-
 def get_all_animals():
-    conn = get_db_connection()
-    if conn:
-        try:
-            query = text("EXEC ws.spGetAllAnimals")
-            result = conn.execute(query)
-            rows = result.fetchall()
-            columns = result.keys()
-
-            animals = [dict(zip(columns, row)) for row in rows]
+    animals = all_animals
+    if animals:
             return animals
-        except Exception as e:
-            print(f"An error occurred: {e}")
-            return []
-        finally:
-            conn.close()
     else:
-        print("Connection string not found in environment variables.")
+        print("It seems there are no animals in our database")
         return []
 
 def get_favourite_animals(username):
