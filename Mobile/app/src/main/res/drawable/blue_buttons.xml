@@ -1,0 +1,5 @@
+<!-- res/drawable/rounded_baby_blue_button.xml -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@color/baby_blue" /> <!-- Use a shade of baby blue -->
+    <corners android:radius="8dp" /> <!-- Adjust the radius as needed -->
+</shape>
