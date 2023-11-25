@@ -192,6 +192,7 @@ public class AnimalsListActivity extends AppCompatActivity{
             ImageView heart = itemView.findViewById(R.id.favorite);
             if(favorites !=null && containsObject(favorites,animal)){
                 heart.setImageResource(R.drawable.white_filled_heart_icon);
+                heart.setTag("filled_heart");
             }
             itemName.setText(animal.getString("category"));
             descriptionText.setText(animal.getString("shortDescription"));
@@ -213,7 +214,15 @@ public class AnimalsListActivity extends AppCompatActivity{
             heart.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View view){
-                    heart.setImageResource(R.drawable.white_filled_heart_icon);
+                    Object tag= heart.getTag();
+                    if(tag!=null && tag.equals("filled_heart")) {
+                        heart.setImageResource(R.drawable.unfilled_heart_icon);
+                        heart.setTag("unfilled_heart");
+                    }
+                    else {
+                        heart.setImageResource(R.drawable.white_filled_heart_icon);
+                        heart.setTag("filled_heart");
+                    }
                     String username= getSavedUsername();
                     String animal= itemName.getText().toString();
                     AddToFavorites(username, animal);
